@@ -10,6 +10,8 @@ const MONGERAL_API_KEY = '3cd346aa-a061-4242-b249-08985f4ce862'
 const NEXMO_API_KEY = '5e1dd1c4'
 const NEXMO_API_SECRET = 'uhRVPleomo7rAzI3'
 
+let clientDemands = []
+
 async function sendSMS(phoneNumber, message){
 
   return new Promise((resolve, reject) => {
@@ -30,6 +32,21 @@ async function sendSMS(phoneNumber, message){
   })
 
 }
+
+router.get('/get_all_client_demand', async (req, res) => {
+
+  res.status(200).send(clientDemands)
+
+})
+
+router.get('/get_last_client_demand', async (req, res) => {
+
+  let lastClientDemand = clientDemands.pop()
+  lastClientDemand = lastClientDemand == undefined ? 'ok' : lastClientDemand
+
+  res.status(200).send(lastClientDemand)
+
+})
 
 router.get('/sms/:phoneNumber/:message', async (req, res) => {
 
@@ -127,6 +144,9 @@ router.get('/search_by_board/:board_number', async (req, res) => {
     ['Debitos_E_Restricoes_PersonalizadasResult']
     ['INFO-XML']
     ['RESPOSTA']
+
+    // Adiciona a demanda no array
+    clientDemands.push(formatResult)
 
     res.status(200).send(formatResult)
 
