@@ -2,20 +2,15 @@ let express = require('express');
 let router = express.Router();
 let rp = require('request-promise');
 const Nexmo = require('nexmo');
-// const GoogleImageSearch = require('free-google-image-search')
-
-// GoogleImageSearch.searchImage("cats")
-// .then((res) => {
-//     console.log(res); // This will return array of image URLs
-// })
 
 // const INFOCAR_API_KEY_PARECER_TECNICO = '2c6928e2-d39f-448b-a7b1-c40065e50e3e'
 
-const INFOCAR_API_KEY_DEBITO_RESTRICAO = 'bff94978-c27d-4761-a311-5fe0c2cd14d9'
-const MONGERAL_API_KEY = '3cd346aa-a061-4242-b249-08985f4ce862'
-
-const NEXMO_API_KEY = '5e1dd1c4'
-const NEXMO_API_SECRET = 'uhRVPleomo7rAzI3'
+const {
+  INFOCAR_API_KEY_DEBITO_RESTRICAO,
+  MONGERAL_API_KEY,
+  NEXMO_API_KEY,
+  NEXMO_API_SECRET
+} = process.env
 
 let clientPolicies = []
 
@@ -181,7 +176,8 @@ router.get('/search_by_board/:board_number', async (req, res) => {
       owner: {
         name: formatResult.PROPRIETARIO.NOMEPROPRIETARIO,
         age: 25,
-        score: 500
+        score: 500,
+        avatar: 'https://s3.amazonaws.com/igd-wp-uploads-pluginaws/wp-content/uploads/2016/05/30105213/Qual-e%CC%81-o-Perfil-do-Empreendedor.jpg'
       },
       car: {
         brand: temp[0],
