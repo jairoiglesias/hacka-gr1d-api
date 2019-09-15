@@ -3,14 +3,15 @@ let router = express.Router();
 let rp = require('request-promise');
 const Nexmo = require('nexmo');
 
-const INFOCAR_API_KEY_PARECER_TECNICO = '2c6928e2-d39f-448b-a7b1-c40065e50e3e'
+// const INFOCAR_API_KEY_PARECER_TECNICO = '2c6928e2-d39f-448b-a7b1-c40065e50e3e'
+
 const INFOCAR_API_KEY_DEBITO_RESTRICAO = 'bff94978-c27d-4761-a311-5fe0c2cd14d9'
 const MONGERAL_API_KEY = '3cd346aa-a061-4242-b249-08985f4ce862'
 
 const NEXMO_API_KEY = '5e1dd1c4'
 const NEXMO_API_SECRET = 'uhRVPleomo7rAzI3'
 
-let clientDemands = []
+let clientPolicies = []
 
 async function sendSMS(phoneNumber, message){
 
@@ -33,18 +34,40 @@ async function sendSMS(phoneNumber, message){
 
 }
 
-router.get('/get_all_client_demand', async (req, res) => {
+router.get('/clear_all_policy', async(req, res) => {
 
-  res.status(200).send(clientDemands)
+  clientPolicies = []
+
+  res.status(200).send({
+    message: 'All Cliente Policies Clear'
+  })
 
 })
 
-router.get('/get_last_client_demand', async (req, res) => {
+router.get('/get_all_policies', async (req, res) => {
 
-  let lastClientDemand = clientDemands.pop()
-  lastClientDemand = lastClientDemand == undefined ? 'ok' : lastClientDemand
+  let customPayloads = clientPolicies.map(policy => policy.customPayload)
 
-  res.status(200).send(lastClientDemand)
+  res.status(200).send(customPayloads)
+
+})
+
+router.get('/get_last_client_policy', async (req, res) => {
+
+  let lastClientPolicy = clientPolicies.pop()
+  lastClientPolicy = lastClientPolicy == undefined ? 'ok' : lastClientPolicy
+
+  res.status(200).send(lastClientPolicy)
+
+})
+
+router.get('/get_last_client_policy/noclear', async (req, res) => {
+
+  // let lastClientPolicy = clientPolicies.pop()
+  let lastClientPolicy = clientPolicies.slice(-1)[0]
+  lastClientPolicy = lastClientPolicy == undefined ? 'ok' : lastClientPolicy
+  
+  res.status(200).send(lastClientPolicy)
 
 })
 
@@ -145,10 +168,29 @@ router.get('/search_by_board/:board_number', async (req, res) => {
     ['INFO-XML']
     ['RESPOSTA']
 
-    // Adiciona a demanda no array
-    clientDemands.push(formatResult)
+    const customPayload = {
+      owner: {
+        name: formatResult.PROPRIETARIO.NOMEPROPRIETARIO,
+        age: 25,
+        score: 500
+      },
+      car: {
+        brand: formatResult.VEICULO.MARCADESC,
+        model: formatResult.VEICULO.TIPODESC,
+        year: formatResult.VEICULO.ANOMODELO,
+        odometer: 40000,
+      }
+    }
 
-    res.status(200).send(formatResult)
+    const reg = {
+      formatResult,
+      customPayload
+    }
+
+    // Adiciona a demanda no array
+    clientPolicies.push(reg)
+
+    res.status(200).send(reg)
 
   }
   catch(e){
