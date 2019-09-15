@@ -66,7 +66,7 @@ router.get('/get_last_client_policy/noclear', async (req, res) => {
   // let lastClientPolicy = clientPolicies.pop()
   let lastClientPolicy = clientPolicies.slice(-1)[0]
   lastClientPolicy = lastClientPolicy == undefined ? 'ok' : lastClientPolicy
-  
+
   res.status(200).send(lastClientPolicy)
 
 })
@@ -168,6 +168,9 @@ router.get('/search_by_board/:board_number', async (req, res) => {
     ['INFO-XML']
     ['RESPOSTA']
 
+    let temp = formatResult.VEICULO.MARCADESC.split('/')
+
+
     const customPayload = {
       owner: {
         name: formatResult.PROPRIETARIO.NOMEPROPRIETARIO,
@@ -175,8 +178,8 @@ router.get('/search_by_board/:board_number', async (req, res) => {
         score: 500
       },
       car: {
-        brand: formatResult.VEICULO.MARCADESC,
-        model: formatResult.VEICULO.TIPODESC,
+        brand: temp[0],
+        model: temp[1],
         year: formatResult.VEICULO.ANOMODELO,
         odometer: 40000,
       }
