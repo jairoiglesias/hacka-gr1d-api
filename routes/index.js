@@ -1,10 +1,46 @@
 let express = require('express');
 let router = express.Router();
 let rp = require('request-promise');
+const Nexmo = require('nexmo');
 
 const INFOCAR_API_KEY_PARECER_TECNICO = '2c6928e2-d39f-448b-a7b1-c40065e50e3e'
 const INFOCAR_API_KEY_DEBITO_RESTRICAO = 'bff94978-c27d-4761-a311-5fe0c2cd14d9'
 const MONGERAL_API_KEY = '3cd346aa-a061-4242-b249-08985f4ce862'
+
+const NEXMO_API_KEY = '5e1dd1c4'
+const NEXMO_API_SECRET = 'uhRVPleomo7rAzI3'
+
+async function sendSMS(phoneNumber, message){
+
+  return new Promise((resolve, reject) => {
+
+    const nexmo = new Nexmo({
+      apiKey: NEXMO_API_KEY,
+      apiSecret: NEXMO_API_SECRET
+    });
+  
+    const from = 'Nexmo';
+    const to = phoneNumber;
+    const text = message
+  
+    nexmo.message.sendSms(from, to, text);
+
+    resolve()
+
+  })
+
+}
+
+router.get('/sms/:phoneNumber/:message', async (req, res) => {
+
+  const phoneNumber = req.params.phoneNumber
+  const message = req.params.message
+
+  await sendSMS(phoneNumber, message)
+
+  res.status(200).send({message: 'ok'})
+
+})
 
 router.get('/simulate_proposal', async (req, res) => {
 
