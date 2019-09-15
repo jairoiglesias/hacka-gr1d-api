@@ -58,24 +58,27 @@ router.get('/simulate_proposal', async (req, res) => {
 
 router.get('/search_by_board/:board_number', async (req, res) => {
 
-  const boardNumber = req.params.board_number
-
-  var options = {
-    method: 'POST',
-    uri: 'https://gateway.gr1d.io/sandbox/infocar/debitoserestricoes/v1/INFOCAR_DEBITOS_E_RESTRICOES_PERSONALIZADA',
-    headers: {
-      'X-Api-Key': INFOCAR_API_KEY_DEBITO_RESTRICAO
-    },
-    body: {
-      "parameters": {
-        "dado": boardNumber,
-        "tipo": "PLACA"
-      }
-    },
-    json: true
-  };
-
   try{
+
+    let boardNumber = req.params.board_number
+    
+    boardNumber = boardNumber.trim()
+
+    var options = {
+      method: 'POST',
+      uri: 'https://gateway.gr1d.io/sandbox/infocar/debitoserestricoes/v1/INFOCAR_DEBITOS_E_RESTRICOES_PERSONALIZADA',
+      headers: {
+        'X-Api-Key': INFOCAR_API_KEY_DEBITO_RESTRICAO
+      },
+      body: {
+        "parameters": {
+          "dado": boardNumber,
+          "tipo": "PLACA"
+        }
+      },
+      timeout: 15000,
+      json: true
+    };
 
     let result = await rp(options)
 
