@@ -2,6 +2,12 @@ let express = require('express');
 let router = express.Router();
 let rp = require('request-promise');
 const Nexmo = require('nexmo');
+// const GoogleImageSearch = require('free-google-image-search')
+
+// GoogleImageSearch.searchImage("cats")
+// .then((res) => {
+//     console.log(res); // This will return array of image URLs
+// })
 
 // const INFOCAR_API_KEY_PARECER_TECNICO = '2c6928e2-d39f-448b-a7b1-c40065e50e3e'
 
